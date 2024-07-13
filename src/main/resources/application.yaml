@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: stock-processor
+  kafka:
+    bootstrap-servers: 192.168.1.238:29093
+hobbyinvestor:
+  consumer-group-id: 123456789
+  topic-names:
+    companyProfileUpdateTopic: companyProfileUpdate
+    companyFinancialsUpdateTopic: companyFinancialsUpdate
+    companyNewsUpdateTopic: companyNewsUpdate
+  mongo:
+    database-name: hobbyinvestor
+    company-profile:
+      uri: mongodb://192.168.1.238:27017/companyDetails
+
