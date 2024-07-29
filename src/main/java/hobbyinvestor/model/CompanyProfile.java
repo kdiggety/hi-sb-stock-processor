@@ -1,14 +1,16 @@
-
 package hobbyinvestor.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Data
 @Document(collection = "companyProfile")
+@org.springframework.data.elasticsearch.annotations.Document(indexName = "company_profile")
 public class CompanyProfile {
+    @Id
     @MongoId
     @JsonProperty("ticker")
     private String ticker;
