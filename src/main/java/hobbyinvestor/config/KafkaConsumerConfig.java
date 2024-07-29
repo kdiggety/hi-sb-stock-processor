@@ -12,7 +12,6 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,14 +21,17 @@ public class KafkaConsumerConfig {
     @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrapAddress;
 
-    @Value(value = "${hobbyinvestor.consumer-group-id}")
-    private String groupId;
+    @Value(value = "${hobbyinvestor.consumer.mongo-group-id}")
+    private String mongoGroupId;
+
+    @Value(value = "${hobbyinvestor.consumer.elasticsearch-group-id}")
+    private String elasticSearchGroupId;
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, mongoGroupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(props);
@@ -44,20 +46,38 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, CompanyProfile> companyProfileConsumerFactory() {
+    public ConsumerFactory<String, CompanyProfile> mongoGroupCompanyProfileConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, mongoGroupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new JsonDeserializer<>(CompanyProfile.class));
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, CompanyProfile> companyProfileKafkaListenerContainerFactory() {
+    public ConsumerFactory<String, CompanyProfile> elasticSearchGroupCompanyProfileConsumerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, elasticSearchGroupId);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new JsonDeserializer<>(CompanyProfile.class));
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, CompanyProfile> mongoCompanyProfileKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, CompanyProfile> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(companyProfileConsumerFactory());
+        factory.setConsumerFactory(mongoGroupCompanyProfileConsumerFactory());
+        return factory;
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, CompanyProfile> elasticSearchCompanyProfileKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, CompanyProfile> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(elasticSearchGroupCompanyProfileConsumerFactory());
         return factory;
     }
 }

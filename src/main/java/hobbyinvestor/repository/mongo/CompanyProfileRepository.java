@@ -1,4 +1,4 @@
-package hobbyinvestor.repository;
+package hobbyinvestor.repository.mongo;
 
 import hobbyinvestor.model.CompanyProfile;
 import org.springframework.data.mongodb.repository.MongoRepository;

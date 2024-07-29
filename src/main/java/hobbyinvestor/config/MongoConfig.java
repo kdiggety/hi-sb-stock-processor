@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @Configuration
-@EnableMongoRepositories(basePackages = "hobbyinvestor.repository")
+@EnableMongoRepositories(basePackages = "hobbyinvestor.repository.mongo")
 public class MongoConfig extends AbstractMongoClientConfiguration {
     @Value(value = "${hobbyinvestor.mongo.database-name}")
     private String databaseName;

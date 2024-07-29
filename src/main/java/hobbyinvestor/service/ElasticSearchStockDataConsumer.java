@@ -1,18 +1,17 @@
 package hobbyinvestor.service;
 
 import hobbyinvestor.model.CompanyProfile;
-import hobbyinvestor.repository.CompanyProfileRepository;
+import hobbyinvestor.repository.elasticsearch.SearchCompanyProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class StockDataProcessor {
-    private final CompanyProfileRepository companyProfileRepository;
+public class ElasticSearchStockDataConsumer {
+    private final SearchCompanyProfileRepository companyProfileRepository;
 
     /*@KafkaListener(topics = "${hobbyinvestor.topic-names.companyProfileUpdateTopic}")
     public void processCompanyProfileUpdateString(String data) {
@@ -21,7 +20,7 @@ public class StockDataProcessor {
 
     @KafkaListener(
             topics = "${hobbyinvestor.topic-names.companyProfileUpdateTopic}",
-            containerFactory = "companyProfileKafkaListenerContainerFactory")
+            containerFactory = "elasticSearchCompanyProfileKafkaListenerContainerFactory")
     public void processCompanyProfileUpdate(CompanyProfile companyProfile) {
         log.info(String.format("Processing company profile update: %s", companyProfile));
         companyProfileRepository.save(companyProfile);
