@@ -10,7 +10,7 @@ hobbyinvestor:
     companyFinancialsUpdateTopic: companyFinancialsUpdate
     companyNewsUpdateTopic: companyNewsUpdate
   mongo:
-    database-name: hobbyinvestor
+    database-name: hobbyInvestor
     company-profile:
       uri: mongodb://192.168.1.238:27017/companyDetails
 
